@@ -4,13 +4,13 @@
     <name>soapui-plugin</name>
     <display-name>SoapUI Pro Functional Testing</display-name>
     <version>@Version@</version>
-    <description>A SmartBear plugin used to run SoapUI Pro tests from TeamCity.</description>
-    <download-url>Plugin download URL</download-url>
-    <email>Plugin author e-mail</email>
+    <description>A SmartBear plugin used to run SoapUI Pro tests from TeamCity builds</description>
+    <download-url>https://github.com/SmartBear/soapui-pro-functional-testing-teamcity-plugin</download-url>
+    <email>Alexander.Chernyaev@smartbear.com</email>
     <vendor>
       <name>SmartBear Software</name>
       <url>https://smartbear.com/</url>
-      <logo>Plugin vendor logo URL</logo>
+      <logo></logo>
     </vendor>
   </info>
   <deployment use-separate-classloader="true" />
