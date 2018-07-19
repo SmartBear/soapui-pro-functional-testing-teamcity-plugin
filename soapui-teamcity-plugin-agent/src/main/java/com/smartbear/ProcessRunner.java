@@ -35,9 +35,11 @@ public class ProcessRunner {
     private static final String SH = ".sh";
     private static final String BAT = ".bat";
     private boolean isSoapUIProProject = false;
+    private BuildProgressLogger logger;
 
     Process run(final SoapUITestBuildProcess buildProcess, final BuildProgressLogger logger, final ParametersContainer params)
             throws IOException {
+        this.logger = logger;
         List<String> processParameterList = new ArrayList<>();
         String testrunnerFilePath = buildTestRunnerPath(params.getPathToTestrunner());
         if (isNotBlank(testrunnerFilePath) && new File(testrunnerFilePath).exists()) {
@@ -47,7 +49,7 @@ public class ProcessRunner {
             return null;
         }
 
-        String reportDirectoryPath = params.getWorkspace() + READYAPI_REPORT_DIRECTORY;
+        String reportDirectoryPath = params.getWorkspace() + File.separator + READYAPI_REPORT_DIRECTORY;
         setReportDirectory(reportDirectoryPath);
         processParameterList.addAll(Arrays.asList("-f", reportDirectoryPath));
 
@@ -148,6 +150,12 @@ public class ProcessRunner {
         File reportDirectoryFile = new File(reportDirectoryPath);
         if (!reportDirectoryFile.exists()) {
             reportDirectoryFile.mkdir();
+        } else {
+            try {
+                FileUtils.cleanDirectory(reportDirectoryFile);
+            } catch (IOException e) {
+                logger.exception(e);
+            }
         }
     }
 
