@@ -9,19 +9,19 @@
      <file>
          <source>target/teamcity-plugin.xml</source>
          <outputDirectory>/</outputDirectory>
-     </file> 
+     </file>
      <file>
          <source>target/soapui-teamcity-plugin-agent.zip</source>
          <outputDirectory>agent</outputDirectory>
-     </file> 
+     </file>
   </files>
   <moduleSets>
     <moduleSet>
        <useAllReactorProjects>true</useAllReactorProjects>
        <includes>
-           <include>com.smartbear:soapui-plugin-server</include>
-           <include>com.smartbear:soapui-plugin-common</include>
-       </includes> 
+           <include>com.smartbear:soapui-teamcity-plugin-server</include>
+           <include>com.smartbear:soapui-teamcity-plugin-common</include>
+       </includes>
        <binaries>
            <outputDirectory>server</outputDirectory>
            <unpack>false</unpack>
