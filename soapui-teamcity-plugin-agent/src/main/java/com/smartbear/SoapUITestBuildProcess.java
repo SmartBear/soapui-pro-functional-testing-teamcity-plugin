@@ -112,7 +112,10 @@ public class SoapUITestBuildProcess implements BuildProcess, Callable<BuildFinis
         } finally {
             if (process != null) {
                 try {
-                    process.waitFor();
+                    int exitCode = process.waitFor();
+                    if (exitCode != 0) {
+                        return BuildFinishedStatus.FINISHED_FAILED;
+                    }
                 } catch (Exception e) {
                     logger.error("Could not start SoapUI Pro functional testing:");
                     logger.exception(e);
