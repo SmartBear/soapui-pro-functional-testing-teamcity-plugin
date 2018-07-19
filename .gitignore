@@ -1,0 +1,14 @@
+# Project files
+*.iml
+*.idea
+.settings/
+.classpath
+.project
+*-ide-plugin.xml
+.sonar
+
+# Logs
+*.log
+
+# Build folders
+target/
