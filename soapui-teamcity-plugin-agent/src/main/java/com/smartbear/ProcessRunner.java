@@ -179,7 +179,7 @@ public class ProcessRunner {
         SAXParser saxParser = factory.newSAXParser();
         //if composite project, check settings.xml file
         if (new File(projectFilePath).isDirectory()) {
-            projectFilePath = projectFilePath + COMPOSITE_PROJECT_SETTINGS_FILE_PATH;
+            projectFilePath = projectFilePath + File.separator + COMPOSITE_PROJECT_SETTINGS_FILE_PATH;
             if (!new File(projectFilePath).exists()) {
                 throw new IOException("Missing settings.xml file in the composite project! Can not check if the project " +
                         "is a SoapUI Pro project. Exiting.");
