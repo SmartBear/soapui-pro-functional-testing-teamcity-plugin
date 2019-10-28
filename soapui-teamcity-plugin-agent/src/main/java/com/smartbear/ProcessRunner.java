@@ -2,6 +2,7 @@ package com.smartbear;
 
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import org.apache.commons.io.FileUtils;
+import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -34,6 +35,7 @@ public class ProcessRunner {
     private static final String TERMINATION_STRING = "Please enter absolute path of the license file";
     private static final String SH = ".sh";
     private static final String BAT = ".bat";
+    private static final String JAR = ".jar";
     private boolean isSoapUIProProject = false;
     private BuildProgressLogger logger;
 
@@ -162,16 +164,36 @@ public class ProcessRunner {
     private boolean shouldSendAnalytics(String testrunnerFile) throws IOException {
         String testrunnerFileToString = FileUtils.readFileToString(new File(testrunnerFile));
         if (testrunnerFileToString.contains(TESTRUNNER_VERSION_DETERMINANT)) {
-            int startFromIndex = testrunnerFileToString.indexOf(TESTRUNNER_VERSION_DETERMINANT) + TESTRUNNER_VERSION_DETERMINANT.length();
-            int firstVersionNumber = Character.getNumericValue(testrunnerFileToString.charAt(startFromIndex));
-            if (firstVersionNumber >= TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER) {
-                int secondVersionIndex = Character.getNumericValue(testrunnerFileToString.charAt(startFromIndex + 2));
-                if (secondVersionIndex >= TESTRUNNER_VERSION_FOR_ANALYTICS_SECOND_NUMBER) {
+            int[] versionNumbers = getVersionNumbers(testrunnerFileToString);
+            if (versionNumbers != null) {
+                int firstVersionNumber = versionNumbers[0];
+                if (firstVersionNumber > TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER) {
                     return true;
+                } else if (firstVersionNumber == TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER) {
+                    int secondVersionIndex = versionNumbers[1];
+                    return secondVersionIndex >= TESTRUNNER_VERSION_FOR_ANALYTICS_SECOND_NUMBER;
                 }
             }
         }
         return false;
+    }
+
+    @Nullable
+    private int[] getVersionNumbers(String testRunnerFileContent) {
+        try {
+            int[] versionNumbers = new int[2];
+            int startIndex = testRunnerFileContent.indexOf(TESTRUNNER_VERSION_DETERMINANT) + TESTRUNNER_VERSION_DETERMINANT.length();
+            int endIndex = testRunnerFileContent.indexOf(JAR, startIndex);
+            String version = testRunnerFileContent.substring(startIndex, endIndex);
+            String[] versionStringArray = version.split("\\.");
+            for (int i = 0; i < versionNumbers.length; i++) {
+                versionNumbers[i] = Integer.parseInt(versionStringArray[i]);
+            }
+            return versionNumbers;
+        } catch (Exception e) {
+            logger.exception(e);
+            return null;
+        }
     }
 
     private void checkIfSoapUIProProject(String projectFilePath) throws ParserConfigurationException, SAXException, IOException {
