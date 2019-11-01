@@ -2,7 +2,6 @@ package com.smartbear;
 
 import jetbrains.buildServer.agent.BuildProgressLogger;
 import org.apache.commons.io.FileUtils;
-import org.jetbrains.annotations.Nullable;
 import org.xml.sax.Attributes;
 import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
@@ -24,8 +23,8 @@ import static org.apache.commons.lang3.StringUtils.isNotBlank;
 public class ProcessRunner {
     public final static String READYAPI_REPORT_DIRECTORY = "ReadyAPI_report";
     private static final String TESTRUNNER_VERSION_DETERMINANT = "ready-api-ui-";
-    private static final int TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER = 2;
-    private static final int TESTRUNNER_VERSION_FOR_ANALYTICS_SECOND_NUMBER = 4;
+    private static final int TESTRUNNER_MAJOR_VERSION_FOR_ANALYTICS = 2;
+    private static final int TESTRUNNER_MINOR_VERSION_FOR_ANALYTICS = 4;
     private static final String TESTRUNNER_NAME = "testrunner";
     private static final String COMPOSITE_PROJECT_SETTINGS_FILE_PATH = "settings.xml";
     private static final String SOAPUI_PRO_FUNCTIONAL_TESTING_PLUGIN_INFO = "/soapuiTeamCityPlugin.properties";
@@ -164,35 +163,27 @@ public class ProcessRunner {
     private boolean shouldSendAnalytics(String testrunnerFile) throws IOException {
         String testrunnerFileToString = FileUtils.readFileToString(new File(testrunnerFile));
         if (testrunnerFileToString.contains(TESTRUNNER_VERSION_DETERMINANT)) {
-            int[] versionNumbers = getVersionNumbers(testrunnerFileToString);
-            if (versionNumbers != null) {
-                int firstVersionNumber = versionNumbers[0];
-                if (firstVersionNumber > TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER) {
-                    return true;
-                } else if (firstVersionNumber == TESTRUNNER_VERSION_FOR_ANALYTICS_FIRST_NUMBER) {
-                    int secondVersionIndex = versionNumbers[1];
-                    return secondVersionIndex >= TESTRUNNER_VERSION_FOR_ANALYTICS_SECOND_NUMBER;
-                }
+            Version version = getVersion(testrunnerFileToString);
+            int majorVersion = version.getMajorVersion();
+            if (majorVersion > TESTRUNNER_MAJOR_VERSION_FOR_ANALYTICS) {
+                return true;
+            } else if (majorVersion == TESTRUNNER_MAJOR_VERSION_FOR_ANALYTICS) {
+                int minorVersion = version.getMinorVersion();
+                return minorVersion >= TESTRUNNER_MINOR_VERSION_FOR_ANALYTICS;
             }
         }
         return false;
     }
 
-    @Nullable
-    private int[] getVersionNumbers(String testRunnerFileContent) {
+    private Version getVersion(String testRunnerFileContent) {
         try {
-            int[] versionNumbers = new int[2];
             int startIndex = testRunnerFileContent.indexOf(TESTRUNNER_VERSION_DETERMINANT) + TESTRUNNER_VERSION_DETERMINANT.length();
             int endIndex = testRunnerFileContent.indexOf(JAR, startIndex);
-            String version = testRunnerFileContent.substring(startIndex, endIndex);
-            String[] versionStringArray = version.split("\\.");
-            for (int i = 0; i < versionNumbers.length; i++) {
-                versionNumbers[i] = Integer.parseInt(versionStringArray[i]);
-            }
-            return versionNumbers;
+            String versionString = testRunnerFileContent.substring(startIndex, endIndex);
+            return Version.getFromString(versionString);
         } catch (Exception e) {
             logger.exception(e);
-            return null;
+            return Version.getDefaultVersion();
         }
     }
 
