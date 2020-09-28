@@ -1,4 +1,4 @@
-# SoapUI Pro Functional Testing Plugin
+# ReadyAPI Test Functional Testing Plugin
 
 ### About
 
