@@ -35,7 +35,7 @@ public class SoapUITestRunnerType extends RunType {
 
     @Override
     public String getDescription() {
-        return "Runs ReadyAPI Tests";
+        return "Runs ReadyAPI tests";
     }
 
     @Override
