@@ -2,9 +2,9 @@
 <teamcity-plugin xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:schemas-jetbrains-com:teamcity-plugin-v1-xml">
   <info>
     <name>soapui-plugin</name>
-    <display-name>SoapUI Pro Functional Testing</display-name>
+    <display-name>ReadyAPI Test Functional Testing</display-name>
     <version>@Version@</version>
-    <description>A SmartBear plugin used to run SoapUI Pro tests from TeamCity builds</description>
+    <description>A SmartBear plugin used to run ReadyAPI Test tests from TeamCity builds</description>
     <download-url>https://github.com/SmartBear/soapui-pro-functional-testing-teamcity-plugin</download-url>
     <email>Ilya.Avdeev@smartbear.com</email>
     <vendor>

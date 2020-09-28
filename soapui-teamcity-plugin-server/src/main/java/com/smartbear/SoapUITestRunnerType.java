@@ -30,12 +30,12 @@ public class SoapUITestRunnerType extends RunType {
 
     @Override
     public String getDisplayName() {
-        return "SoapUI Pro: Run Functional Test";
+        return "ReadyAPI Test: Run Functional Test";
     }
 
     @Override
     public String getDescription() {
-        return "Runs SoapUI tests";
+        return "Runs ReadyAPI tests";
     }
 
     @Override

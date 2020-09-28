@@ -18,7 +18,7 @@
 </tr>
 <tr>
     <th>
-        <label for="soapuiProjectPath">Path to SoapUI Pro Project:
+        <label for="soapuiProjectPath">Path to ReadyAPI Project:
             <span class="mandatoryAsterix" title="Mandatory field">*</span>
         </label>
     </th>
